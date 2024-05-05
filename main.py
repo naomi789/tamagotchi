@@ -48,6 +48,8 @@ print("Set display")
 
 while True:
     print(f"(Re) start loop: {key_0.value}, {key_1.value}, {key_2.value}, {key_3.value}")
+    print(f"(Re) start loop: {key_0.direction}, {key_1.value}, {key_2.value}, {key_3.value}")
+
     if key_0.value:
         print("Key 0 pressed")
         # convert png to index bmp: https://learn.adafruit.com/creating-your-first-tilemap-game-with-circuitpython/indexed-bmp-graphics
@@ -59,13 +61,27 @@ while True:
         display.root_group = group
     if key_1.value:
         print("Key 1 pressed")
-        # Do something for key 1 press
+        bitmap = displayio.OnDiskBitmap("/images/hug-alligator-pig.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
     if key_2.value:
         print("Key 2 pressed")
-        # Do something for key 2 press
+        bitmap = displayio.OnDiskBitmap("/images/01-flower.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
     if key_3.value:
         print("Key 3 pressed")
-        # Do something for key 3 press
-    # Add a small delay to avoid CPU intensive polling
+        bitmap = displayio.OnDiskBitmap("/images/11-flower.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
+# Add a small delay to avoid CPU intensive polling
     time.sleep(2)
-
