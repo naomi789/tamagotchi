@@ -24,14 +24,6 @@ backlight = board.GP13
 print("Accessed board")
 
 
-# Define keys
-key_0.switch_to_input(pull=digitalio.Pull.DOWN)
-key_1.switch_to_input(pull=digitalio.Pull.DOWN)
-key_2.switch_to_input(pull=digitalio.Pull.DOWN)
-key_3.switch_to_input(pull=digitalio.Pull.DOWN)
-
-print("Defined keys")
-
 # forked from: https://docs.circuitpython.org/projects/st7789/en/latest/examples.html#x135
 display_bus = displayio.FourWire(spi, command=tft_dc, chip_select=tft_cs, reset=reset)
 display = ST7789(
@@ -48,7 +40,17 @@ print("Set display")
 
 while True:
     print(f"(Re) start loop: {key_0.value}, {key_1.value}, {key_2.value}, {key_3.value}")
-    print(f"(Re) start loop: {key_0.direction}, {key_1.value}, {key_2.value}, {key_3.value}")
+
+    # Define keys
+    key_0.switch_to_input(pull=digitalio.Pull.DOWN)
+    key_1.switch_to_input(pull=digitalio.Pull.DOWN)
+    key_2.switch_to_input(pull=digitalio.Pull.DOWN)
+    key_3.switch_to_input(pull=digitalio.Pull.DOWN)
+    for i in [key_0, key_1, key_2, key_3]:
+        i.direction = Direction.INPUT
+        i.pull = Pull.UP
+
+    print("Defined keys")
 
     if key_0.value:
         print("Key 0 pressed")
