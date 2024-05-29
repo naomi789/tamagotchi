@@ -18,6 +18,10 @@ Similar to but different from Tamagotchi - a grad school project
  - [CircuitPython for the Raspberry Pi Pico](https://circuitpython.org/board/raspberry_pi_pico_w/)
  - [Official CircuitPython libraries](https://circuitpython.org/libraries)
 
+# to update
+ - Our device is optimized for BMP images that are 128x128 pixels and are index to be black and white
+ - For some versions of our prototype, we had to convert from JPG to BMP and we used [this guide](https://learn.adafruit.com/creating-your-first-tilemap-game-with-circuitpython/indexed-bmp-graphics)
+
 # special thanks to free online tutorials
 ## we leaned heavily on: 
  - [How to display a BMP image using CircuitPython](https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap)
