@@ -48,9 +48,8 @@ display = ST7735R(
     backlight_pin=backlight,
 )
 
-
 while True:
-    if key_0.value:
+    if not key_0.value:
         print("Key 0 pressed")
         # convert png to index bmp: https://learn.adafruit.com/creating-your-first-tilemap-game-with-circuitpython/indexed-bmp-graphics
         bitmap = displayio.OnDiskBitmap("/images/hello-world.bmp")
@@ -59,15 +58,39 @@ while True:
         group = displayio.Group()
         group.append(tile_grid)
         display.root_group = group
-    if key_1.value:
+        time.sleep(3)
+    if not key_1.value:
         print("Key 1 pressed")
-        # Do something for key 1 press
-    if key_2.value:
+        bitmap = displayio.OnDiskBitmap("/images/hug-alligator-pig.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
+        time.sleep(3)
+    if not key_2.value:
         print("Key 2 pressed")
-        # Do something for key 2 press
-    if key_3.value:
+        bitmap = displayio.OnDiskBitmap("/images/01-flower.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
+        time.sleep(3)
+    if not key_3.value:
         print("Key 3 pressed")
-        # Do something for key 3 press
-    # Add a small delay to avoid CPU intensive polling
-    time.sleep(2)
-
+        bitmap = displayio.OnDiskBitmap("/images/11-flowers.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
+        time.sleep(3)
+    else:
+        bitmap = displayio.OnDiskBitmap("/images/white.bmp")
+        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        group = displayio.Group()
+        group.append(tile_grid)
+        display.root_group = group
+        time.sleep(3)    
