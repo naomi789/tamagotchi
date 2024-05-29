@@ -8,8 +8,7 @@ Similar to but different from Tamagotchi - a grad school project
  - One USB-C to MicroUSB cable
 
 ## software
- - CircuitPython (9.x)
- - Various libraries (e.g., [ST7735R](https://github.com/adafruit/Adafruit_CircuitPython_ST7735R/tree/ad2e00c5d9f5b2094ea0ed160c499bc68b14a8a2))
+ - [libraries for CircuitPython (9.x)](https://circuitpython.org/libraries) - I used the ST7735R
 
 ## documentation  
  - [Waveshare's documentation about the Waveshare Pico LCD 1.44](https://www.waveshare.com/wiki/Pico-LCD-1.44)
