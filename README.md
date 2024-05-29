@@ -27,9 +27,11 @@ Similar to but different from Tamagotchi - a grad school project
  - [CircuitPython for the Raspberry Pi Pico](https://circuitpython.org/board/raspberry_pi_pico_w/)
  - [Official CircuitPython libraries](https://circuitpython.org/libraries)
 
-## troubleshooting
 # set up
 ## hardware
  - One Waveshare 1.44inch LCD Display Module for Raspberry Pi Pico 65K RGB Colors 128×128 Pixels (we got ours for [$15.99 on Amazon with one-day shipping](https://www.amazon.com/dp/B0957NJP97/))
-## software
+ - One Pre-Soldered Header Raspberry Pi Pico W, Built-in WiFi Support 2.4 GHZ Wi-Fi 4, (we got ours for [$14.60 on Amazon with one-day shipping](https://www.amazon.com/dp/B0BK9W4H2Q/)
+ - One USB-C to MicroUSB cable
 
+## software
+ - CircuitPython (9.x)
