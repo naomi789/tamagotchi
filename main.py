@@ -49,6 +49,7 @@ display = ST7735R(
 )
 
 while True:
+    print("While true"
     if key_0.value:
         print("Key 0 pressed")
         # convert png to index bmp: https://learn.adafruit.com/creating-your-first-tilemap-game-with-circuitpython/indexed-bmp-graphics
