@@ -47,14 +47,18 @@ display = ST7735R(
 class GameState:
     map = {
         "welcome": [None, "friend1", None, None],
-        "friend1": ["friend4", ["friend1_hugconfirm.bmp", "friend1_hugbase.bmp"], "friend1_info", "friend2"],
-        "friend2": ["friend1", ["friend2_hugconfirm.bmp", "friend2_hugbase.bmp"], "friend2_info", "friend3"],
-        "friend3": ["friend2", ["friend3_hugconfirm.bmp", "friend3_hugbase.bmp"], "friend3_info", "friend4"],
-        "friend4": ["friend3", ["friend4_hugconfirm.bmp", "friend4_hugbase.bmp"], "friend4_info", "friend1"],
+        "friend1": ["friend4", "friend1_hugconfirm", "friend1_info", "friend2"],
+        "friend2": ["friend1", "friend2_hugconfirm", "friend2_info", "friend3"],
+        "friend3": ["friend2", "friend3_hugconfirm", "friend3_info", "friend4"],
+        "friend4": ["friend3", "friend4_hugconfirm", "friend4_info", "friend1"],
         "friend1_info": [None, None, "friend1", None], # create "to exit press "circle" screen??? or make every button exit? 
         "friend2_info": [None, None, "friend2", None],
         "friend3_info": [None, None, "friend3", None],
         "friend4_info": [None, None, "friend4", None],
+        "friend1_hugconfirm": [None, "friend1_hugbase", None, None],
+        "friend2_hugconfirm": [None, "friend2_hugbase", None, None],
+        "friend3_hugconfirm": [None, "friend3_hugbase", None, None],
+        "friend4_hugconfirm": [None, "friend4_hugbase", None, None]
         }
     def __init__(self):
         self.state = "welcome"
@@ -66,7 +70,12 @@ class GameState:
         self.update_screen()
 
     def update_screen(self):
-        display_image("/images/{}.bmp".format(self.state))
+        if not "hugbase" in self.state:
+            display_image("/images/{}.bmp".format(self.state))
+        else:
+            # show "friend?_hugbase.bmp" and "friend4_hugscroll.bmp" and "hugheartscroll.bmp"
+            # and update the "friend?.bmp" screen to a newer image if possible
+            var = 1+1
         
         
 def display_image(image):
