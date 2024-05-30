@@ -6,6 +6,7 @@ import busio
 import digitalio
 import time
 
+print('hi')
 
 # forked https://github.com/dfinein/Pico-LCd-114/blob/main/main.py
 displayio.release_displays() # what does this do???
@@ -49,43 +50,54 @@ display = ST7735R(
 )
 
 pals = ["/images/friend1.bmp", "/images/friend2.bmp", "/images/friend3.bmp", "/images/friend4.bmp"]
-pal_index = 1
+print(pals[1])
+# TODO check if 1 indexed or zero indexed
+pal_index = 0
+count_pals_min = 0
+count_pals_max = 3
 current_screen = "/images/test-welcome.bmp"
 
 while True:
     print("current_screen is set to", current_screen)
-    if not key_0.value:
+    if not key_0.value: # LEFT BUTTON
         print("Key 0 pressed")
         pal_index = pal_index - 1
         current_screen = pals[pal_index]
 
-    if not key_1.value:
+    elif not key_1.value: # HEART BUTTON
         print("Key 1 pressed")
+        if current_screen == "/images/test-welcome.bmp":
+            current_screen = pals[pal_index]
         # confirmation screen if correct friend, then show "confirmation" screen
-        if current_screen == "/images/TODO": # TODO: name of correct friend
+        elif current_screen == "/images/TODO": # TODO: name of correct friend
             current_screen = "/images/hug_confirmation.bmp"
-        else if current_screen == "/images/hug_confirmation.bmp":
+        elif current_screen == "/images/hug_confirmation.bmp":
             # show annimation
             current_screen = "animate this"
         else:
             current_screen = "images/hug_cannot.bmp"
 
-    if not key_2.value:
+    elif not key_2.value: # INFO BUTTON
         print("Key 2 pressed")
-        # see info screen if on correct friend
-        # else show "prototype doesn't have info on this friend"
-        # if correct friend, then show "info" screen
-        if current_screen == "/images/TODO": # TODO: name of correct friend
-            current_screen = "/images/info.bmp"
-        else if current_screen == "/images/hug_confirmation.bmp":
-            # show annimation
-            current_screen = "animate this"
+        if current_screen.startswith("/images/friend") and not current_screen.endswith("info.bmp"):
+            prefix = current_screen[:15]
+            print(prefix)
+            current_screen = prefix + "_info.bmp"
+            print(current_screen)
+        elif current_screen.endswith("info.bmp"):
+            prefix = current_screen[:15]
+            print(prefix)
+            current_screen = prefix + ".bmp"
+            print(current_screen)
         else:
             current_screen = "/images/hug_cannot.bmp"
 
-    if not key_3.value:
+    elif not key_3.value: # RIGHT BUTTON
         print("Key 3 pressed")
-        pal_index = pal_index + 1
+        if pal_index < count_pals_max:
+            pal_index = pal_index + 1
+        elif pal_index == count_pals_max:
+            pal_index = count_pals_min
         current_screen = pals[pal_index]
 
 
