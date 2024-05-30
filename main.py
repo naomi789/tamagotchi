@@ -6,8 +6,6 @@ import busio
 import digitalio
 import time
 
-print('hi')
-
 # forked https://github.com/dfinein/Pico-LCd-114/blob/main/main.py
 displayio.release_displays() # what does this do???
 chip_spi = board.GP10
@@ -90,7 +88,7 @@ while True:
             current_screen = prefix + ".bmp"
             print(current_screen)
         else:
-            current_screen = "/images/hug_cannot.bmp"
+            print("assert error in key 2")
 
     elif not key_3.value: # RIGHT BUTTON
         print("Key 3 pressed")
