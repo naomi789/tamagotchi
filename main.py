@@ -1,14 +1,13 @@
+import asyncio
+import keypad
 import board
 import displayio
-# from adafruit_st7789 import ST7789
 from adafruit_st7735r import ST7735R
 import busio
 import digitalio
 import time
-# import zipfile
+import adafruit_imageload
 
-
-# forked https://github.com/dfinein/Pico-LCd-114/blob/main/main.py
 displayio.release_displays() # what does this do???
 chip_spi = board.GP10
 mosi = board.GP11
@@ -22,23 +21,19 @@ key_3 = board.GP3
 reset = board.GP12
 backlight = board.GP13
 
-# Define keys
-key_0 = digitalio.DigitalInOut(board.GP15)
-key_0.switch_to_input(pull=digitalio.Pull.UP)
+async def catch_pin_transitions():
+    """Print a message when pin goes low and when it goes high."""
+    with keypad.Keys((key_0, key_1, key_2, key_3),
+                        value_when_pressed=False) as keys:
+        while True:
+            event = keys.events.get()
+            if event and  event.pressed:
+                print("Key {} was pressed".format(event.key_number))
+                game_state.key_press(event.key_number)
+            await asyncio.sleep(0)
 
-key_1 = digitalio.DigitalInOut(board.GP17)
-key_1.switch_to_input(pull=digitalio.Pull.UP)
-
-key_2 = digitalio.DigitalInOut(board.GP2)
-key_2.switch_to_input(pull=digitalio.Pull.UP)
-
-key_3 = digitalio.DigitalInOut(board.GP3)
-key_3.switch_to_input(pull=digitalio.Pull.UP)
-
-# forked from: https://docs.circuitpython.org/projects/st7789/en/latest/examples.html#x135
-# adjusted from ST7789 to ST7735R (which includes the S version we're using):
-# https://github.com/adafruit/Adafruit_CircuitPython_ST7735R
 display_bus = displayio.FourWire(spi, command=tft_dc, chip_select=tft_cs, reset=reset)
+
 display = ST7735R(
     display_bus,
     rotation=180,
@@ -49,75 +44,46 @@ display = ST7735R(
     backlight_pin=backlight,
 )
 
-pals = ["/images/friend1.bmp", "/images/friend2.bmp", "/images/friend3.bmp", "/images/friend4.bmp"]
-print(pals[1])
-# TODO check if 1 indexed or zero indexed
-pal_index = 0
-count_pals_min = 0
-count_pals_max = 3
-current_screen = "/images/test-welcome.bmp"
+class GameState:
+    map = {
+        "welcome": [None, "friend1", None, None],
+        "friend1": ["friend4", ["friend1_hugconfirm.bmp", "friend1_hugbase.bmp"], "friend1_info", "friend2"],
+        "friend2": ["friend1", ["friend2_hugconfirm.bmp", "friend2_hugbase.bmp"], "friend2_info", "friend3"],
+        "friend3": ["friend2", ["friend3_hugconfirm.bmp", "friend3_hugbase.bmp"], "friend3_info", "friend4"],
+        "friend4": ["friend3", ["friend4_hugconfirm.bmp", "friend4_hugbase.bmp"], "friend4_info", "friend1"],
+        "friend1_info": [None, None, "friend1", None], # create "to exit press "circle" screen??? or make every button exit? 
+        "friend2_info": [None, None, "friend2", None],
+        "friend3_info": [None, None, "friend3", None],
+        "friend4_info": [None, None, "friend4", None],
+        }
+    def __init__(self):
+        self.state = "welcome"
+        self.update_screen()
 
-while True:
-    print("current_screen is set to", current_screen)
-    if not key_0.value: # LEFT BUTTON
-        print("Key 0 pressed")
-        pal_index = pal_index - 1
-        current_screen = pals[pal_index]
+    def key_press(self, key_number):
+        self.state = self.map[self.state][key_number]
+        print("New state", self.state)
+        self.update_screen()
 
-    elif not key_1.value: # HEART BUTTON
-        print("Key 1 pressed")
-        if current_screen == "/images/test-welcome.bmp":
-            current_screen = pals[pal_index]
-        # confirmation screen if correct friend, then show "confirmation" screen
-        elif current_screen == "/images/TODO": # TODO: name of correct friend
-            current_screen = "/images/hug_confirmation.bmp"
-        elif current_screen == "/images/hug_confirmation.bmp":
-            # show annimation
-            current_screen = "animate this"
-        else:
-            current_screen = "images/hug_cannot.bmp"
-
-    elif not key_2.value: # INFO BUTTON
-        print("Key 2 pressed")
-        if current_screen.startswith("/images/friend") and not current_screen.endswith("info.bmp"):
-            prefix = current_screen[:15]
-            print(prefix)
-            current_screen = prefix + "_info.bmp"
-            print(current_screen)
-        elif current_screen.endswith("info.bmp"):
-            prefix = current_screen[:15]
-            print(prefix)
-            current_screen = prefix + ".bmp"
-            print(current_screen)
-        else:
-            print("assert error in key 2")
-
-    elif not key_3.value: # RIGHT BUTTON
-        print("Key 3 pressed")
-        if pal_index < count_pals_max:
-            pal_index = pal_index + 1
-        elif pal_index == count_pals_max:
-            pal_index = count_pals_min
-        current_screen = pals[pal_index]
-
-
-    if current_screen == "animate this":
-        # then do animation
-        print("idk how to animate")
-    else:
-        # zip_file_path = current_screen + ".zip"
-        # destination_dir = "/temp"
-        # if not os.path.exists(destination_dir):
-            # os.makedirs(destination_dir)
-        # with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-            # # Extract all the contents into the destination directory
-            # zip_ref.extractall(destination_dir)
-        
-        bitmap = displayio.OnDiskBitmap(current_screen)
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
-        group = displayio.Group()
-        group.append(tile_grid)
-        display.root_group = group
-        time.sleep(3)
+    def update_screen(self):
+        display_image("/images/{}.bmp".format(self.state))
         
         
+def display_image(image):
+    bitmap, palette = adafruit_imageload.load(
+                        image,
+                        bitmap=displayio.Bitmap,
+                        palette=displayio.Palette)
+    tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette)
+    group = displayio.Group()
+    group.append(tile_grid)
+    display.root_group = group
+
+async def main():
+    global game_state
+    game_state = GameState()
+    interrupt_task = asyncio.create_task(catch_pin_transitions())
+    await asyncio.gather(interrupt_task)
+
+asyncio.run(main())
+
