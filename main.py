@@ -48,48 +48,52 @@ display = ST7735R(
     backlight_pin=backlight,
 )
 
-while True:
+pals = ["/images/friend1.bmp", "/images/friend2.bmp", "/images/friend3.bmp", "/images/friend4.bmp"]
+pal_index = 1
+current_screen = "/images/test-welcome.bmp"
 
+while True:
+    print("current_screen is set to", current_screen)
     if not key_0.value:
         print("Key 0 pressed")
-        # convert png to index bmp: https://learn.adafruit.com/creating-your-first-tilemap-game-with-circuitpython/indexed-bmp-graphics
-        bitmap = displayio.OnDiskBitmap("/images/hello-world.bmp")
-        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
-        group = displayio.Group()
-        group.append(tile_grid)
-        display.root_group = group
-        time.sleep(3)
+        pal_index = pal_index - 1
+        current_screen = pals[pal_index]
+
     if not key_1.value:
         print("Key 1 pressed")
-        bitmap = displayio.OnDiskBitmap("/images/hug-alligator-pig.bmp")
-        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
-        group = displayio.Group()
-        group.append(tile_grid)
-        display.root_group = group
-        time.sleep(3)
+        # confirmation screen if correct friend, then show "confirmation" screen
+        if current_screen == "/images/TODO": # TODO: name of correct friend
+            current_screen = "/images/hug_confirmation.bmp"
+        else if current_screen == "/images/hug_confirmation.bmp":
+            # show annimation
+            current_screen = "animate this"
+        else:
+            current_screen = "images/hug_cannot.bmp"
+
     if not key_2.value:
         print("Key 2 pressed")
-        bitmap = displayio.OnDiskBitmap("/images/01-flower.bmp")
-        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
-        group = displayio.Group()
-        group.append(tile_grid)
-        display.root_group = group
-        time.sleep(3)
+        # see info screen if on correct friend
+        # else show "prototype doesn't have info on this friend"
+        # if correct friend, then show "info" screen
+        if current_screen == "/images/TODO": # TODO: name of correct friend
+            current_screen = "/images/info.bmp"
+        else if current_screen == "/images/hug_confirmation.bmp":
+            # show annimation
+            current_screen = "animate this"
+        else:
+            current_screen = "/images/hug_cannot.bmp"
+
     if not key_3.value:
         print("Key 3 pressed")
-        bitmap = displayio.OnDiskBitmap("/images/11-flowers.bmp")
-        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
-        group = displayio.Group()
-        group.append(tile_grid)
-        display.root_group = group
-        time.sleep(3)
-    else:
-        bitmap = displayio.OnDiskBitmap("/images/white.bmp")
-        # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
+        pal_index = pal_index + 1
+        current_screen = pals[pal_index]
+
+
+    if current_screen == "animate this":
+        # then do animation
+        print("idk how to animate")
+    else: 
+        bitmap = displayio.OnDiskBitmap(current_screen)
         tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
         group = displayio.Group()
         group.append(tile_grid)
