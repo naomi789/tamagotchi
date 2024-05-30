@@ -5,6 +5,8 @@ from adafruit_st7735r import ST7735R
 import busio
 import digitalio
 import time
+# import zipfile
+
 
 # forked https://github.com/dfinein/Pico-LCd-114/blob/main/main.py
 displayio.release_displays() # what does this do???
@@ -42,8 +44,8 @@ display = ST7735R(
     rotation=180,
     width=128,
     height=128,
-    colstart=1,
-    rowstart=2,
+    colstart=2,
+    rowstart=3,
     backlight_pin=backlight,
 )
 
@@ -102,7 +104,15 @@ while True:
     if current_screen == "animate this":
         # then do animation
         print("idk how to animate")
-    else: 
+    else:
+        # zip_file_path = current_screen + ".zip"
+        # destination_dir = "/temp"
+        # if not os.path.exists(destination_dir):
+            # os.makedirs(destination_dir)
+        # with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+            # # Extract all the contents into the destination directory
+            # zip_ref.extractall(destination_dir)
+        
         bitmap = displayio.OnDiskBitmap(current_screen)
         tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
         group = displayio.Group()
