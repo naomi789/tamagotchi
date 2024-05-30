@@ -23,16 +23,16 @@ backlight = board.GP13
 
 # Define keys
 key_0 = digitalio.DigitalInOut(board.GP15)
-key_0.switch_to_input(pull=digitalio.Pull.DOWN)
+key_0.switch_to_input(pull=digitalio.Pull.UP)
 
 key_1 = digitalio.DigitalInOut(board.GP17)
-key_1.switch_to_input(pull=digitalio.Pull.DOWN)
+key_1.switch_to_input(pull=digitalio.Pull.UP)
 
 key_2 = digitalio.DigitalInOut(board.GP2)
-key_2.switch_to_input(pull=digitalio.Pull.DOWN)
+key_2.switch_to_input(pull=digitalio.Pull.UP)
 
 key_3 = digitalio.DigitalInOut(board.GP3)
-key_3.switch_to_input(pull=digitalio.Pull.DOWN)
+key_3.switch_to_input(pull=digitalio.Pull.UP)
 
 # forked from: https://docs.circuitpython.org/projects/st7789/en/latest/examples.html#x135
 # adjusted from ST7789 to ST7735R (which includes the S version we're using):
@@ -43,14 +43,14 @@ display = ST7735R(
     rotation=180,
     width=128,
     height=128,
-    colstart=0,
-    rowstart=0, # idk why 80??? why not (0,0)???
+    colstart=1,
+    rowstart=2,
     backlight_pin=backlight,
 )
 
 while True:
-    print("While true"
-    if key_0.value:
+
+    if not key_0.value:
         print("Key 0 pressed")
         # convert png to index bmp: https://learn.adafruit.com/creating-your-first-tilemap-game-with-circuitpython/indexed-bmp-graphics
         bitmap = displayio.OnDiskBitmap("/images/hello-world.bmp")
@@ -60,7 +60,7 @@ while True:
         group.append(tile_grid)
         display.root_group = group
         time.sleep(3)
-    if key_1.value:
+    if not key_1.value:
         print("Key 1 pressed")
         bitmap = displayio.OnDiskBitmap("/images/hug-alligator-pig.bmp")
         # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
@@ -69,7 +69,7 @@ while True:
         group.append(tile_grid)
         display.root_group = group
         time.sleep(3)
-    if key_2.value:
+    if not key_2.value:
         print("Key 2 pressed")
         bitmap = displayio.OnDiskBitmap("/images/01-flower.bmp")
         # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
@@ -78,7 +78,7 @@ while True:
         group.append(tile_grid)
         display.root_group = group
         time.sleep(3)
-    if key_3.value:
+    if not key_3.value:
         print("Key 3 pressed")
         bitmap = displayio.OnDiskBitmap("/images/11-flowers.bmp")
         # forked from: https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-a-bitmap
@@ -95,3 +95,5 @@ while True:
         group.append(tile_grid)
         display.root_group = group
         time.sleep(3)
+        
+        
