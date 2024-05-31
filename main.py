@@ -102,13 +102,11 @@ class GameState:
             self.flower_counts[current_friend] = new_count
 
             # if I have a new photo, then update image
-            # print("self.find_gardens[new_count]: {}".format(self.find_gardens[new_count]))
             self.friends_gardens[current_friend] = current_friend + self.find_gardens[new_count]
+            # TODO: reinitialize map with updated values
             
-            print("\nself.flower_counts[current_friend]: {}".format(self.flower_counts[current_friend]))
-            print("current_friend: {}\n".format(current_friend))            
+            # display "first flower" screen if this is the first flower
             if self.flower_counts[current_friend] == 3 and current_friend == "friend1": # magic string: only friend with zero flowers
-                print("first flower!!")
                 display_image("/images/{}_flowercongrats.bmp".format(current_friend))
                 time.sleep(3)
                 
