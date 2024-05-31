@@ -73,9 +73,33 @@ class GameState:
         if not "hugbase" in self.state:
             display_image("/images/{}.bmp".format(self.state))
         else:
-            # show "friend?_hugbase.bmp" and "friend4_hugscroll.bmp" and "hugheartscroll.bmp"
-            # and update the "friend?.bmp" screen to a newer image if possible
-            var = 1+1
+            display_hug("/images/{}.bmp".format(self.state))
+            
+            
+            
+def load_partial_image(image_path, x, y):
+    bitmap, palette = adafruit_imageload.load(
+        image_path,
+        bitmap=displayio.Bitmap,
+        palette=displayio.Palette)
+    tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette, x=x, y=y)
+    return tile_grid
+
+def display_hug(image):
+    # create the compound image
+    image_top_text = image[:16] + "hugscroll"
+    tile_grid_top_text = load_partial_image("{}.bmp".format(image_top_text), x=0, y=0) # about 33 pixels tall
+    tile_grid_middle_hearts = load_partial_image("/images/{}.bmp".format("hugheartscroll"), x=0, y=33)  # about 33 pixels tall
+    tile_grid_bottom_critters = load_partial_image(image, x=0, y=66)  # about 93 pixels tall
+    
+    group = displayio.Group()
+    group.append(tile_grid_top_text)
+    group.append(tile_grid_middle_hearts)
+    group.append(tile_grid_bottom_critters)
+    display.root_group = group
+    
+    # and update the "friend?.bmp" screen to a newer image if possible
+
         
         
 def display_image(image):
