@@ -45,12 +45,19 @@ display = ST7735R(
 )
 
 class GameState:
+    friends_gardens = {
+        "friend1": "friend1",
+        "friend2": "friend2",
+        "friend3": "friend3",
+        "friend4": "friend4",
+    }
+    
     map = {
         "welcome": [None, "friend1", None, None],
-        "friend1": ["friend4", "friend1_hugconfirm", "friend1_info", "friend2"],
-        "friend2": ["friend1", "friend2_hugconfirm", "friend2_info", "friend3"],
-        "friend3": ["friend2", "friend3_hugconfirm", "friend3_info", "friend4"],
-        "friend4": ["friend3", "friend4_hugconfirm", "friend4_info", "friend1"],
+        "friend1": [friends_gardens["friend4"], "friend1_hugconfirm", "friend1_info", friends_gardens["friend2"]],
+        "friend2": [friends_gardens["friend1"], "friend2_hugconfirm", "friend2_info", friends_gardens["friend3"]],
+        "friend3": [friends_gardens["friend2"], "friend3_hugconfirm", "friend3_info", friends_gardens["friend4"]],
+        "friend4": [friends_gardens["friend3"], "friend4_hugconfirm", "friend4_info", friends_gardens["friend1"]],
         "friend1_info": [None, None, "friend1", None], 
         "friend2_info": [None, None, "friend2", None],
         "friend3_info": [None, None, "friend3", None],
@@ -60,12 +67,30 @@ class GameState:
         "friend3_hugconfirm": [None, "friend3_hugbase", None, None],
         "friend4_hugconfirm": [None, "friend4_hugbase", None, None]
         }
-    friends = {
+    flower_counts = {
         "friend1": 0,
         "friend2": 8,
         "friend3": 6,
         "friend4": 11,
         }
+    find_gardens = {
+        0: "friend1",
+        .34: "friend1_flower1",
+        .68: "friend1_flower2",
+        1.02: "friend1_flower3", 
+        8: "friend2",
+        8.34: "friend2_flower1",
+        8.68: "friend2_flower2",
+        9.02: "friend2_flower3", 
+        6: "friend3",
+        6.34: "friend3_flower1",
+        6.68: "friend3_flower2",
+        7.02: "friend3_flower3", 
+        11: "friend4",
+        11.34: "friend4_flower1",
+        11.68: "friend4_flower2",
+        12.02: "friend4_flower3",
+    }
     
     def __init__(self):
         self.state = "welcome"
@@ -84,17 +109,18 @@ class GameState:
             current_friend = self.state[:7]
             print("current_friend: {}".format(current_friend))
             # update count of flowers 
-            old_count = self.friends[current_friend]
+            old_count = self.flower_counts[current_friend]
             new_count = old_count + .34
-            self.friends[current_friend] = new_count
-            print("new count: {}".format(self.friends[current_friend]))
+            self.flower_counts[current_friend] = new_count
+            print("new count: {}".format(self.flower_counts[current_friend]))
 
-            # if I have a new photo
-            # then update image
+            # if I have a new photo, then update image
+            print("self.find_gardens[new_count]: {}".format(self.find_gardens[new_count]))
+            self.friends_gardens[current_friend] = self.find_gardens[new_count]
             
-            print("self.friends[current_friend]: {}".format(self.friends[current_friend]))
+            print("self.flower_counts[current_friend]: {}".format(self.flower_counts[current_friend]))
             
-            if (self.friends[current_friend] < 1.03) and (self.friends[current_friend] > 1.01):
+            if (self.flower_counts[current_friend] < 1.03) and (self.flower_counts[current_friend] > 1.01):
                 print("first flower!!")
                 display_image("/images/{}_flowercongrats.bmp".format(current_friend))
                 time.sleep(3)
