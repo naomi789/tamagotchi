@@ -45,44 +45,56 @@ display = ST7735R(
 )
 
 class GameState:
-    friends_gardens = {
-        "friend1": "friend1",
-        "friend2": "friend2",
-        "friend3": "friend3",
-        "friend4": "friend4",
-    }
-    
-    map = {
-        "welcome": [None, "friend1", None, None],
-        "friend1": [friends_gardens["friend4"], "friend1_hugconfirm", "friend1_info", friends_gardens["friend2"]],
-        "friend2": [friends_gardens["friend1"], "friend2_hugconfirm", "friend2_info", friends_gardens["friend3"]],
-        "friend3": [friends_gardens["friend2"], "friend3_hugconfirm", "friend3_info", friends_gardens["friend4"]],
-        "friend4": [friends_gardens["friend3"], "friend4_hugconfirm", "friend4_info", friends_gardens["friend1"]],
-        "friend1_info": [None, None, "friend1", None], 
-        "friend2_info": [None, None, "friend2", None],
-        "friend3_info": [None, None, "friend3", None],
-        "friend4_info": [None, None, "friend4", None],
-        "friend1_hugconfirm": [None, "friend1_hugbase", None, None],
-        "friend2_hugconfirm": [None, "friend2_hugbase", None, None],
-        "friend3_hugconfirm": [None, "friend3_hugbase", None, None],
-        "friend4_hugconfirm": [None, "friend4_hugbase", None, None]
-        }
-    flower_counts = {
-        "friend1": 0, 
-        "friend2": 0, 
-        "friend3": 0, 
-        "friend4": 0
-        }
-    find_gardens = {
-        0: "",
-        1: "_flower1",
-        2: "_flower2",
-        3: "_flower3", 
-}
-    
     def __init__(self):
+        self.friends_gardens = {
+            "friend1": "friend1",
+            "friend2": "friend2",
+            "friend3": "friend3",
+            "friend4": "friend4",
+        }
+        self.flower_counts = {
+            "friend1": 0, 
+            "friend2": 0, 
+            "friend3": 0, 
+            "friend4": 0
+        }
+        self.find_gardens = {
+            0: "",
+            1: "_flower1",
+            2: "_flower2",
+            3: "_flower3",
+        }
         self.state = "welcome"
+        self.reinitialize_map()
         self.update_screen()
+    
+    def reinitialize_map(self):
+        self.map = {
+            "welcome": [None, "friend1", None, None],
+            "friend1": [self.friends_gardens["friend4"], "friend1_hugconfirm", "friend1_info", self.friends_gardens["friend2"]],
+            "friend2": [self.friends_gardens["friend1"], "friend2_hugconfirm", "friend2_info", self.friends_gardens["friend3"]],
+            "friend3": [self.friends_gardens["friend2"], "friend3_hugconfirm", "friend3_info", self.friends_gardens["friend4"]],
+            "friend4": [self.friends_gardens["friend3"], "friend4_hugconfirm", "friend4_info", self.friends_gardens["friend1"]],
+            "friend1_info": [None, None, "friend1", None], 
+            "friend2_info": [None, None, "friend2", None],
+            "friend3_info": [None, None, "friend3", None],
+            "friend4_info": [None, None, "friend4", None],
+            "friend1_hugconfirm": [None, "friend1_hugbase", None, None],
+            "friend2_hugconfirm": [None, "friend2_hugbase", None, None],
+            "friend3_hugconfirm": [None, "friend3_hugbase", None, None],
+            "friend4_hugconfirm": [None, "friend4_hugbase", None, None],
+            "friend1_flower1": [self.friends_gardens["friend4"], "friend1_hugconfirm", "friend1_info", self.friends_gardens["friend2"]],
+            "friend2_flower1": [self.friends_gardens["friend1"], "friend2_hugconfirm", "friend2_info", self.friends_gardens["friend3"]],
+            "friend3_flower1": [self.friends_gardens["friend2"], "friend3_hugconfirm", "friend3_info", self.friends_gardens["friend4"]],
+            "friend4_flower1": [self.friends_gardens["friend3"], "friend4_hugconfirm", "friend4_info", self.friends_gardens["friend1"]],
+            "friend1_flower2": [self.friends_gardens["friend4"], "friend1_hugconfirm", "friend1_info", self.friends_gardens["friend2"]],
+            "friend2_flower2": [self.friends_gardens["friend1"], "friend2_hugconfirm", "friend2_info", self.friends_gardens["friend3"]],
+            "friend3_flower2": [self.friends_gardens["friend2"], "friend3_hugconfirm", "friend3_info", self.friends_gardens["friend4"]],
+            "friend4_flower2": [self.friends_gardens["friend3"], "friend4_hugconfirm", "friend4_info", self.friends_gardens["friend1"]],
+            "friend1_flower3": [self.friends_gardens["friend4"], "friend1_hugconfirm", "friend1_info", self.friends_gardens["friend2"]],
+            "friend2_flower3": [self.friends_gardens["friend1"], "friend2_hugconfirm", "friend2_info", self.friends_gardens["friend3"]],
+            "friend3_flower3": [self.friends_gardens["friend2"], "friend3_hugconfirm", "friend3_info", self.friends_gardens["friend4"]],
+            "friend4_flower3": [self.friends_gardens["friend3"], "friend4_hugconfirm", "friend4_info", self.friends_gardens["friend1"]],   }
 
     def key_press(self, key_number):
         self.state = self.map[self.state][key_number]
@@ -103,7 +115,7 @@ class GameState:
 
             # if I have a new photo, then update image
             self.friends_gardens[current_friend] = current_friend + self.find_gardens[new_count]
-            # TODO: reinitialize map with updated values
+            self.reinitialize_map()
             
             # display "first flower" screen if this is the first flower
             if self.flower_counts[current_friend] == 3 and current_friend == "friend1": # magic string: only friend with zero flowers
