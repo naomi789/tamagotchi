@@ -88,17 +88,31 @@ def load_partial_image(image_path, x, y):
 def display_hug(image):
     # create the compound image
     image_top_text = image[:16] + "hugscroll"
-    tile_grid_top_text = load_partial_image("{}.bmp".format(image_top_text), x=0, y=0) # about 33 pixels tall
-    tile_grid_middle_hearts = load_partial_image("/images/{}.bmp".format("hugheartscroll"), x=0, y=33)  # about 33 pixels tall
-    tile_grid_bottom_critters = load_partial_image(image, x=0, y=66)  # about 93 pixels tall
+    tile_grid_hearts = load_partial_image("/images/{}.bmp".format("hugheartscroll"), x=0, y=0)  # about 33 pixels tall
+    tile_grid_text = load_partial_image("{}.bmp".format(image_top_text), x=70, y=0) # about 33 pixels tall
+    tile_grid_bottom_critters = load_partial_image(image, x=0, y=33)  # about 93 pixels tall
     
     group = displayio.Group()
-    group.append(tile_grid_top_text)
-    group.append(tile_grid_middle_hearts)
+    group.append(tile_grid_hearts)
+    group.append(tile_grid_text)
     group.append(tile_grid_bottom_critters)
     display.root_group = group
     
+    # Scroll the images to the left
+    for x in range(0, display.width):
+        tile_grid_hearts.x = -x
+        tile_grid_text.x = display.width - x
+
+        if tile_grid_text.x <= 0:
+            temp = tile_grid_hearts
+            tile_grid_hearts = tile_grid_text
+            tile_grid_text = temp
+            tile_grid_text.x = display.width
+
+        time.sleep(0.05)
+    
     # and update the "friend?.bmp" screen to a newer image if possible
+    # and return to the correct friend's screen
 
         
         
