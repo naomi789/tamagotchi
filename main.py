@@ -68,29 +68,17 @@ class GameState:
         "friend4_hugconfirm": [None, "friend4_hugbase", None, None]
         }
     flower_counts = {
-        "friend1": 0,
-        "friend2": 8,
-        "friend3": 6,
-        "friend4": 11,
+        "friend1": 0, 
+        "friend2": 0, 
+        "friend3": 0, 
+        "friend4": 0
         }
     find_gardens = {
-        0: "friend1",
-        .34: "friend1_flower1",
-        .68: "friend1_flower2",
-        1.02: "friend1_flower3", 
-        8: "friend2",
-        8.34: "friend2_flower1",
-        8.68: "friend2_flower2",
-        9.02: "friend2_flower3", 
-        6: "friend3",
-        6.34: "friend3_flower1",
-        6.68: "friend3_flower2",
-        7.02: "friend3_flower3", 
-        11: "friend4",
-        11.34: "friend4_flower1",
-        11.68: "friend4_flower2",
-        12.02: "friend4_flower3",
-    }
+        0: "",
+        1: "_flower1",
+        2: "_flower2",
+        3: "_flower3", 
+}
     
     def __init__(self):
         self.state = "welcome"
@@ -107,27 +95,26 @@ class GameState:
         else:
             display_hug("/images/{}.bmp".format(self.state))
             current_friend = self.state[:7]
-            print("current_friend: {}".format(current_friend))
+
             # update count of flowers 
             old_count = self.flower_counts[current_friend]
-            new_count = old_count + .34
+            new_count = old_count + 1
             self.flower_counts[current_friend] = new_count
-            print("new count: {}".format(self.flower_counts[current_friend]))
 
             # if I have a new photo, then update image
-            print("self.find_gardens[new_count]: {}".format(self.find_gardens[new_count]))
-            self.friends_gardens[current_friend] = self.find_gardens[new_count]
+            # print("self.find_gardens[new_count]: {}".format(self.find_gardens[new_count]))
+            self.friends_gardens[current_friend] = current_friend + self.find_gardens[new_count]
             
-            print("self.flower_counts[current_friend]: {}".format(self.flower_counts[current_friend]))
-            
-            if (self.flower_counts[current_friend] < 1.03) and (self.flower_counts[current_friend] > 1.01):
+            print("\nself.flower_counts[current_friend]: {}".format(self.flower_counts[current_friend]))
+            print("current_friend: {}\n".format(current_friend))            
+            if self.flower_counts[current_friend] == 3 and current_friend == "friend1": # magic string: only friend with zero flowers
                 print("first flower!!")
                 display_image("/images/{}_flowercongrats.bmp".format(current_friend))
                 time.sleep(3)
                 
             # and return to the correct friend's screen
             self.state = current_friend
-            display_image("/images/{}.bmp".format(current_friend))
+            display_image("/images/{}.bmp".format(self.friends_gardens[current_friend]))
             
             
             
