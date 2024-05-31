@@ -51,7 +51,7 @@ class GameState:
         "friend2": ["friend1", "friend2_hugconfirm", "friend2_info", "friend3"],
         "friend3": ["friend2", "friend3_hugconfirm", "friend3_info", "friend4"],
         "friend4": ["friend3", "friend4_hugconfirm", "friend4_info", "friend1"],
-        "friend1_info": [None, None, "friend1", None], # create "to exit press "circle" screen??? or make every button exit? 
+        "friend1_info": [None, None, "friend1", None], 
         "friend2_info": [None, None, "friend2", None],
         "friend3_info": [None, None, "friend3", None],
         "friend4_info": [None, None, "friend4", None],
@@ -60,6 +60,13 @@ class GameState:
         "friend3_hugconfirm": [None, "friend3_hugbase", None, None],
         "friend4_hugconfirm": [None, "friend4_hugbase", None, None]
         }
+    friends = {
+        "friend1": 0,
+        "friend2": 8,
+        "friend3": 6,
+        "friend4": 11,
+        }
+    
     def __init__(self):
         self.state = "welcome"
         self.update_screen()
@@ -74,6 +81,27 @@ class GameState:
             display_image("/images/{}.bmp".format(self.state))
         else:
             display_hug("/images/{}.bmp".format(self.state))
+            current_friend = self.state[:7]
+            print("current_friend: {}".format(current_friend))
+            # update count of flowers 
+            old_count = self.friends[current_friend]
+            new_count = old_count + .34
+            self.friends[current_friend] = new_count
+            print("new count: {}".format(self.friends[current_friend]))
+
+            # if I have a new photo
+            # then update image
+            
+            print("self.friends[current_friend]: {}".format(self.friends[current_friend]))
+            
+            if (self.friends[current_friend] < 1.03) and (self.friends[current_friend] > 1.01):
+                print("first flower!!")
+                display_image("/images/{}_flowercongrats.bmp".format(current_friend))
+                time.sleep(3)
+                
+            # and return to the correct friend's screen
+            self.state = current_friend
+            display_image("/images/{}.bmp".format(current_friend))
             
             
             
@@ -110,9 +138,7 @@ def display_hug(image):
             tile_grid_text.x = display.width
 
         time.sleep(0.05)
-    
-    # and update the "friend?.bmp" screen to a newer image if possible
-    # and return to the correct friend's screen
+
 
         
         
